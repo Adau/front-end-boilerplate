@@ -66,8 +66,16 @@ gulp.task('styles', gulp.series('sass-lint', () => {
     .pipe(gulp.dest('./dist/assets/css'));
 }));
 
+// Validation des fichiers JavaScript
+gulp.task('eslint', () => {
+  return gulp.src('src/assets/js/**/*.js')
+    .pipe($.eslint())
+    .pipe($.eslint.format())
+    .pipe($.eslint.failOnError());
+});
+
 // Génération du fichier JavaScript principal
-gulp.task('scripts', () => {
+gulp.task('scripts', gulp.series('eslint', () => {
   return gulp.src('src/assets/js/main.js')
 
     // Webpack
@@ -106,7 +114,7 @@ gulp.task('scripts', () => {
 
     // Écriture des fichiers JS
     .pipe(gulp.dest('./dist/assets/js'));
-});
+}));
 
 // Optimisation des images
 gulp.task('images', () => {
